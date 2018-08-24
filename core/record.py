@@ -31,3 +31,6 @@ class Amendment:
                 'ttime' : datetime.utcnow()
                 }
 
+
+    def valid_from(self):
+        return self.meta['vtime']

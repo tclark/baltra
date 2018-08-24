@@ -9,4 +9,8 @@ def test_constructor():
     assert(a.value == 'testvalue')
     assert(a.record_id == 'testrecord')
     assert(a.meta['vtime'] == vt)
-    
+
+def test_get_vtime():
+    vt = datetime.fromisoformat('2018-08-01 12:25:00')
+    a = Amendment('testkey', 'testvalue', 'testrecord', vt)
+    assert(a.valid_from() == vt)
