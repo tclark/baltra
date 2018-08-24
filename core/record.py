@@ -34,3 +34,9 @@ class Amendment:
 
     def valid_from(self):
         return self.meta['vtime']
+
+    def __lt__(self, other):
+        return self.valid_from() < other.valid_from()
+
+    def __gt__(self, other):
+        return other < self
