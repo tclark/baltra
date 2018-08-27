@@ -19,6 +19,17 @@ class Record:
     def amend(self, amendment):
         self.amendments.append(amendment)
 
+    def get_amendment(self, key, vtime):
+        all_values = [a for a in self.amendments if a.key == key]
+        trimmed_values = [a for a in all_values if a.valid_from() <= vtime]
+        trimmed_values.sort()
+        val_as_list = trimmed_values[-1:]
+        if val_as_list:
+            return val_as_list[0]
+        return None
+
+
+
 class Amendment:
     
     def __init__(self, key, value, record_id, vtime):
