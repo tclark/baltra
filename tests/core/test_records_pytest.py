@@ -1,5 +1,6 @@
 from core.record import Amendment, Record
 from datetime import datetime
+import pytest
 
 def test_constructor():
     vt = datetime.fromisoformat('2018-01-01 00:00:00')
@@ -25,6 +26,18 @@ def test_amend():
     a = Amendment('testkey', 'testval', rcd.id, amendment_vt)
     rcd.amend(a)
     assert(a in rcd.amendments)
+
+def test_amenment_exception():    
+    vt = datetime.fromisoformat('2018-01-01 00:00:00')
+    tp = 'test_record_type'
+    rcd = Record(vt, tp)
+    amendment_vt = datetime.fromisoformat('2018-01-02 00:00:00')
+    a1 = Amendment('testkey', 'testval', rcd.id, amendment_vt)
+    a2 = Amendment('testkey', 'testval', rcd.id, amendment_vt)
+    rcd.amend(a1)
+    with pytest.raises(ValueError) as ex:
+        rcd.amend(a2)
+    assert('valid time conflicts' in str(ex.value))    
 
 def test_get_amendment():
     vt = datetime.fromisoformat('2018-01-01 00:00:00')

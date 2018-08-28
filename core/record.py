@@ -17,6 +17,9 @@ class Record:
         
 
     def amend(self, amendment):
+        possible_conflict = self.get_amendment(amendment.key, amendment.valid_from())
+        if possible_conflict and possible_conflict.valid_from() == amendment.valid_from():
+            raise ValueError("Amendment valid time conflicts with a prior amendment.")
         self.amendments.append(amendment)
 
     def get_amendment(self, key, vtime):
