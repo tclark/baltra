@@ -6,7 +6,7 @@ class Record:
     def __init__(self, vtime, record_type=None):
         self.id = uuid4()
         self.record_type = record_type
-        self.amendments = []
+        self.amendments = set()
         opening = Amendment('open', True, self.id, vtime)
         self.amend(opening)
 
@@ -20,7 +20,14 @@ class Record:
         possible_conflict = self.get_amendment(amendment.key, amendment.valid_from())
         if possible_conflict and possible_conflict.valid_from() == amendment.valid_from():
             raise ValueError("Amendment valid time conflicts with a prior amendment.")
-        self.amendments.append(amendment)
+        self.amendments.add(amendment)
+
+    def superceed(self, old, new):
+        if old not in self.amendments:
+            raise ValueError('Superceeded amendment not found')
+        new.meta['superceeds'] = old.id
+        old.meta['superceeded_by'] = new.id
+        self.amendments.add(new)
 
     def get_amendment(self, key, vtime):
         all_values = [a for a in self.amendments if a.key == key]
@@ -28,9 +35,19 @@ class Record:
         trimmed_values.sort()
         val_as_list = trimmed_values[-1:]
         if val_as_list:
-            return val_as_list[0]
+            a = val_as_list[0]
+            if 'superceeded_by' in a.meta:
+                return self._get_amendment_by_id(a.meta['superceeded_by'])
+            return a
         return None
 
+    def _get_amendment_by_id(self, id):
+        amds = [a for a in self.amendments if a.id == id]
+        if len(amds) == 0:
+            return None
+        elif len(amds) == 1:
+            return amds[0]
+        raise ValueError('Record._get_by_id would return multiple values')
 
 
 class Amendment:
