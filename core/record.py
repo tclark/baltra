@@ -1,8 +1,9 @@
-from uuid import uuid4
 from datetime import datetime
+from uuid import uuid4
 
 
 class Record:
+
     def __init__(self, vtime, record_type=None):
         self.id = uuid4()
         self.record_type = record_type
@@ -10,11 +11,9 @@ class Record:
         opening = Amendment('open', True, self.id, vtime)
         self.amend(opening)
 
-
     def close(self, vtime):
         closing = Amendment('open', False, self.id, vtime)
         self.amend(closing)
-        
 
     def amend(self, amendment):
         possible_conflict = self.get_amendment(amendment.key, amendment.valid_from())
@@ -62,7 +61,6 @@ class Amendment:
                 'ttime' : datetime.utcnow()
                 }
 
-
     def valid_from(self):
         return self.meta['vtime']
 
@@ -71,3 +69,5 @@ class Amendment:
 
     def __gt__(self, other):
         return other < self
+
+

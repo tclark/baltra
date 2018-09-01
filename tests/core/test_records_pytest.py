@@ -1,6 +1,8 @@
-from core.record import Amendment, Record
 from datetime import datetime
+
 import pytest
+from core.record import Amendment, Record
+
 
 def test_constructor():
     vt = datetime.fromisoformat('2018-01-01 00:00:00')
@@ -18,6 +20,7 @@ def test_constructor():
     assert(a.value == True)
     assert(a.meta['vtime'] == vt)
 
+
 def test_amend():
     vt = datetime.fromisoformat('2018-01-01 00:00:00')
     tp = 'test_record_type'
@@ -26,6 +29,7 @@ def test_amend():
     a = Amendment('testkey', 'testval', rcd.id, amendment_vt)
     rcd.amend(a)
     assert(a in rcd.amendments)
+
 
 def test_amendment_exception():    
     vt = datetime.fromisoformat('2018-01-01 00:00:00')
@@ -39,6 +43,7 @@ def test_amendment_exception():
         rcd.amend(a2)
     assert('valid time conflicts' in str(ex.value))    
 
+
 def test_superceed_amendment():    
     vt = datetime.fromisoformat('2018-01-01 00:00:00')
     tp = 'test_record_type'
@@ -49,6 +54,7 @@ def test_superceed_amendment():
     rcd.amend(a1)
     rcd.superceed(a1, a2)
     assert(rcd.get_amendment('testkey', amendment_vt) == a2)
+
 
 def test_get_amendment():
     vt = datetime.fromisoformat('2018-01-01 00:00:00')
@@ -62,6 +68,7 @@ def test_get_amendment():
     rcd.amend(a2)
     assert(rcd.get_amendment('testkey', amendment_vt1) == a1)
     assert(rcd.get_amendment('testkey', amendment_vt2) == a2)
+
 
 def test_get_amendment_by_id():    
     vt = datetime.fromisoformat('2018-01-01 00:00:00')
@@ -79,3 +86,5 @@ def test_get_amendment_by_id():
     with pytest.raises(ValueError) as ex:
         a2 = rcd._get_amendment_by_id(a1.id)
     assert('multiple values' in str(ex.value))    
+
+
