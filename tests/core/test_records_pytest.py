@@ -41,7 +41,7 @@ def test_amendment_exception():
     rcd.amend(a1)
     with pytest.raises(ValueError) as ex:
         rcd.amend(a2)
-    assert('valid time conflicts' in str(ex.value))    
+    assert('Valid time conflicts' in str(ex.value))    
 
 
 def test_superceed_amendment():    

@@ -16,9 +16,11 @@ class Record:
         self.amend(closing)
 
     def amend(self, amendment):
-        possible_conflict = self.get_amendment(amendment.key, amendment.valid_from())
-        if possible_conflict and possible_conflict.valid_from() == amendment.valid_from():
-            raise ValueError("Amendment valid time conflicts with a prior amendment.")
+        possible_conflict = self.get_amendment(amendment.key, 
+                                               amendment.valid_from())
+        if (possible_conflict 
+            and possible_conflict.valid_from() == amendment.valid_from()):
+            raise ValueError("Valid time conflicts with a prior amendment.")
         self.amendments.add(amendment)
 
     def superceed(self, old, new):
