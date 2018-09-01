@@ -1,7 +1,7 @@
 ![Travis](https://api.travis-ci.org/tclark/baltra.svg?branch=master)
 
 # baltra
-A project for the exploraation and demonstration of ideas involving temporal databases
+A project for the exploration and demonstration of ideas involving temporal databases
 
 ## A few notes
 
