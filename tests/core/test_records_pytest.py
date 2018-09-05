@@ -15,7 +15,7 @@ def test_constructor():
     # and it should be the right ammendment
     a =  rcd.get_amendment('open', vt)
     assert(isinstance(a, Amendment))
-    assert(a.record_id == rcd.id)
+    assert(a.record_id == rcd.id_)
     assert(a.key == 'open')
     assert(a.value == True)
     assert(a.meta['vtime'] == vt)
@@ -26,7 +26,7 @@ def test_amend():
     tp = 'test_record_type'
     rcd = Record(vt, tp)
     amendment_vt = datetime.fromisoformat('2018-01-02 00:00:00')
-    a = Amendment('testkey', 'testval', rcd.id, amendment_vt)
+    a = Amendment('testkey', 'testval', rcd.id_, amendment_vt)
     rcd.amend(a)
     assert(a in rcd.amendments)
 
@@ -36,8 +36,8 @@ def test_amendment_exception():
     tp = 'test_record_type'
     rcd = Record(vt, tp)
     amendment_vt = datetime.fromisoformat('2018-01-02 00:00:00')
-    a1 = Amendment('testkey', 'testval', rcd.id, amendment_vt)
-    a2 = Amendment('testkey', 'testval', rcd.id, amendment_vt)
+    a1 = Amendment('testkey', 'testval', rcd.id_, amendment_vt)
+    a2 = Amendment('testkey', 'testval', rcd.id_, amendment_vt)
     rcd.amend(a1)
     with pytest.raises(ValueError) as ex:
         rcd.amend(a2)
@@ -49,8 +49,8 @@ def test_superceed_amendment():
     tp = 'test_record_type'
     rcd = Record(vt, tp)
     amendment_vt = datetime.fromisoformat('2018-01-02 00:00:00')
-    a1 = Amendment('testkey', 'testval', rcd.id, amendment_vt)
-    a2 = Amendment('testkey', 'testval', rcd.id, amendment_vt)
+    a1 = Amendment('testkey', 'testval', rcd.id_, amendment_vt)
+    a2 = Amendment('testkey', 'testval', rcd.id_, amendment_vt)
     rcd.amend(a1)
     rcd.superceed(a1, a2)
     assert(rcd.get_amendment('testkey', amendment_vt) == a2)
@@ -61,9 +61,9 @@ def test_get_amendment():
     tp = 'test_record_type'
     rcd = Record(vt, tp)
     amendment_vt1 = datetime.fromisoformat('2018-01-02 00:00:00')
-    a1 = Amendment('testkey', 'testval', rcd.id, amendment_vt1)
+    a1 = Amendment('testkey', 'testval', rcd.id_, amendment_vt1)
     amendment_vt2 = datetime.fromisoformat('2018-01-05 00:00:00')
-    a2 = Amendment('testkey', 'testval', rcd.id, amendment_vt2)
+    a2 = Amendment('testkey', 'testval', rcd.id_, amendment_vt2)
     rcd.amend(a1)
     rcd.amend(a2)
     assert(rcd.get_amendment('testkey', amendment_vt1) == a1)
@@ -75,16 +75,16 @@ def test_get_amendment_by_id():
     tp = 'test_record_type'
     rcd = Record(vt, tp)
     amendment_vt = datetime.fromisoformat('2018-01-02 00:00:00')
-    a1 = Amendment('testkey', 'testval', rcd.id, amendment_vt)
+    a1 = Amendment('testkey', 'testval', rcd.id_, amendment_vt)
     rcd.amend(a1)
-    a2 = rcd._get_amendment_by_id(a1.id)
+    a2 = rcd._get_amendment_by_id(a1.id_)
     assert(a1 == a2)
     assert(rcd._get_amendment_by_id('nosuchid') is None)
-    a3 = Amendment('testkey2', 'testval', rcd.id, amendment_vt)
-    a3.id = a1.id
+    a3 = Amendment('testkey2', 'testval', rcd.id_, amendment_vt)
+    a3.id_ = a1.id_
     rcd.amendments.add(a3)
     with pytest.raises(ValueError) as ex:
-        a2 = rcd._get_amendment_by_id(a1.id)
+        a2 = rcd._get_amendment_by_id(a1.id_)
     assert('multiple values' in str(ex.value))    
 
 
